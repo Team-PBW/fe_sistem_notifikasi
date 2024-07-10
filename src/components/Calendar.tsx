@@ -5,7 +5,7 @@ import close from "/public/modal/close.svg";
 import search from "/public/modal/search.svg";
 import LeafletMap from "./MapContainer"; 
 import { EventProvider } from "../context/EventContext";
-import MapButton from "./MapButton"; 
+// import MapButton from "./MapButton"; 
 
 const Calendar = () => {
   const {
@@ -82,9 +82,28 @@ const Calendar = () => {
     }
   };
 
+  const { year, month, date } = calendarDateNow;
+
   useEffect(() => {
     console.log(calendarDateNow);
+    console.log(year);
   }, [calendarDateNow]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!year || !month) return;
+        const response = await fetch(`https://localhost:3000/event/all_events?start_time=${year}-${month}-01&end_time=${year}-${month}-29`);
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [year, month]);
+
 
   return (
     <div className="flex flex-col h-full">

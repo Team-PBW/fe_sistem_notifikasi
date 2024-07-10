@@ -9,6 +9,7 @@ import { useState } from "react";
 const Login = () => {
   const [passHide, setPassHide] = useState(true);
   const [confirmHide, setConfirmHide] = useState(true);
+  const [formData, setFormData] =  useState({});
 
   const passClick = () => {
     setPassHide(!passHide);
@@ -16,6 +17,14 @@ const Login = () => {
 
   const confirmClick = () => {
     setConfirmHide(!confirmHide);
+  };
+
+  const onChangeData = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (

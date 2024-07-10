@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import warn from "/public/dashboarddd/warn.svg";
 
 const Notification = () => {
+
+  useEffect(() => {
+    const url = "";
+  }, [])
+  
   return (
     <div className="shadow-lg w-[20%] font-poppins h-full right-0 z-[10] bg-white">
       <div className="flex justify-center flex-col items-center mt-6 mx-7">
