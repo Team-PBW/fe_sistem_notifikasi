@@ -25,7 +25,7 @@ const Calendar = () => {
 
   const [dateValue, setDateValue] = useState("");
   const [dateDays, setDateDays] = useState([]);
-  const [location, setLocation] = useState("");
+  // const [location, setLocation] = useState("");
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
 
   const [daysAWeek] = useState([
@@ -104,11 +104,149 @@ const Calendar = () => {
     fetchData();
   }, [year, month]);
 
+  const [data, setData] = useState({
+    "date": dateValue,
+    "id_category": 259712
+  });
 
-  const options = [
+  useEffect(() => {
+    setData((prev) => ({
+      ...prev,
+      "date": formatDate(dateValue)
+    }));
+  }, [dateValue]);
+  
+
+  const [time, setTime] = useState([
+    "00:00:00",
+    "00:30:00",
+    "01:00:00",
+    "01:30:00",
+    "02:00:00",
+    "02:30:00",
+    "03:00:00",
+    "03:30:00",
+    "04:00:00",
+    "04:30:00",
+    "05:00:00",
+    "05:30:00",
+    "06:00:00",
+    "06:30:00",
+    "07:00:00",
+    "07:30:00",
+    "08:00:00",
+
+    "08:30:00",
+    "09:00:00",
+    "09:30:00",
+    "10:00:00",
+    "11:30:00",
+    "12:00:00",
+    "12:30:00",
+    "13:00:00",
+    "13:30:00",
+    "14:00:00",
+    "14:30:00",
+    "15:00:00",
+    "15:30:00",
+    "16:00:00",
+    "16:30:00",
+    "17:00:00",
+
+    "17:30:00",
+    "18:00:00",
+    "18:30:00",
+    "19:00:00",
+    "19:30:00",
+    "20:00:00",
+    "21:30:00",
+    "22:00:00",
+    "22:30:00",
+    "23:00:00",
+    "23:30:00",
+
+  ]);
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const optionsUserInvited = [
     { value: 'AL', label: 'Alabama' },
     { value: 'WY', label: 'Wyoming' }
   ];
+
+  useEffect(() => {
+    const fetchAllUser = async () => {
+      const url = "http://localhost:3000/api/v1/auth/search_user";
+      const options = {
+        method: "GET",
+        headers: {
+          // Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+        },
+      };
+  
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const response = await res.json();
+      // localStorage.setItem("token", response.message);
+      console.log(response);
+    }
+
+    fetchAllUser();
+  }, [])
+
+  const token = localStorage.getItem("token");
+
+  function formatDate(dateString) {
+    const months = {
+      "January": "01", "February": "02", "March": "03", "April": "04",
+      "May": "05", "June": "06", "July": "07", "August": "08",
+      "September": "09", "October": "10", "November": "11", "December": "12"
+    };
+  
+    const trimmedDateString = dateString.trim();
+    const [day, month, year] = trimmedDateString.split(' ');
+    const formattedDate = `${year}-${months[month]}-${day.padStart(2, '0')}`;
+  
+    return formattedDate;
+  }
+
+  const submitData = async (e) => {
+    e.preventDefault();
+    const url = "http://localhost:3000/api/v1/event";
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+  
+    try {
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const response = await res.json();
+      // localStorage.setItem("token", response.message);
+      console.log(response);
+      // navigate("/dashboard");
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data])
 
   return (
     <div className="relative flex flex-col h-full">
@@ -123,10 +261,10 @@ const Calendar = () => {
                   <img src={close} alt="close" />
                 </button>
               </div>
-              <form action="" className="flex flex-col gap-y-5 mx-7 my-4">
+              <form onSubmit={submitData} className="flex flex-col gap-y-5 mx-7 my-4">
                 <div className="">
                   <label htmlFor="">Event Name</label>
-                  <input type="text" className="w-full shadow-md p-2" />
+                  <input type="text" name="title" onChange={handleChange} className="w-full shadow-md p-2" />
                 </div>
                 <div className="flex gap-x-3">
                   <div className="basis-1/2">
@@ -134,16 +272,38 @@ const Calendar = () => {
                     <input
                       type="text"
                       className="w-full shadow-md p-2"
+                      name="date"
+                      onChange={handleChange}
                       value={dateValue}
                     />
                   </div>
                   <div className="basis-1/4">
-                    <label htmlFor="">Time Start</label>
-                    <input type="text" className="w-full shadow-md p-2" />
-                  </div>
+                  <label htmlFor="">Time Start</label>
+                  <select name="start_time" onChange={handleChange} className="form-select w-full shadow-md p-2">
+                    <option defaultValue disabled>
+                    Pilih Jam Mulai
+                    </option>
+                    {time.map((val, idx) => (
+                      <option key={idx} value={val}>
+                        {val}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                   <div className="basis-1/4">
                     <label htmlFor="">Time End</label>
-                    <input type="text" className="w-full shadow-md p-2" />
+                    {/* <input type="text" className="w-full shadow-md p-2" /> */}
+                    <select name="end_time" onChange={handleChange} className="form-select w-full shadow-md p-2">
+                    <option defaultValue disabled>
+                      Pilih Jam Selesai
+                    </option>
+                    {time.map((val, idx) => (
+                      <option key={idx} value={val}>
+                        {val}
+                      </option>
+                    ))}
+                  </select>
                   </div>
                 </div>
                 <div className="flex w-full space-x-4">
@@ -153,8 +313,9 @@ const Calendar = () => {
                       <input
                         type="text"
                         className="shadow-md p-2 rounded-md w-full"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        // value={location}
+                        name="location"
+                        onChange={handleChange}
                       />
                       <button
                         type="button"
@@ -166,7 +327,7 @@ const Calendar = () => {
                     </div>
                     <div className="flex flex-col mt-2">
                       <label htmlFor="">Add guests</label>
-                      <Select options={options} isMulti />
+                      <Select options={optionsUserInvited} isMulti />
                     </div>
                   </div>
                   <div className="flex flex-col w-1/2 h-48">
@@ -177,7 +338,7 @@ const Calendar = () => {
                 </div>
                 <div className="">
                   <label htmlFor="">Description</label>
-                  <textarea className="w-full shadow-md p-1 resize-none" />
+                  <textarea className="w-full shadow-md p-1 resize-none" name="description" onChange={handleChange} />
                 </div>
                 <div className="flex flex-col items-end">
                   <button className="p-2 bg-[#1DAEEF] w-1/4 text-white text-md">Save</button>
