@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import useDateDay from "../hooks/useDateDay";
-
 import close from "/public/modal/close.svg";
 import search from "/public/modal/search.svg";
-import LeafletMap from "./MapContainer"; 
+import LeafletMap from "./MapContainer";
 import { EventProvider } from "../context/EventContext";
-import MapButton from "./MapButton"; 
+import MapButton from "./MapButton";
+import Select from 'react-select'; // Import React-Select
 
 const Calendar = () => {
   const {
@@ -86,79 +86,87 @@ const Calendar = () => {
     console.log(calendarDateNow);
   }, [calendarDateNow]);
 
+  const options = [
+    { value: 'AL', label: 'Alabama' },
+    { value: 'WY', label: 'Wyoming' }
+  ];
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="relative flex flex-col h-full">
       {modal && (
-        <div className="absolute z-[10] bg-white shadow-md rounded-lg left-[20%] w-1/2 flex flex-col items-center justify-center h-9/10 font-popins">
-          <div className="py-5">
-            <div className="flex items-center justify-between p-7">
-              <h1 className="text-2xl">CREATE EVENTS</h1>
-              <button onClick={() => setModal(false)}>
-                <img src={close} alt="close" />
-              </button>
-            </div>
-            <form action="" className="flex flex-col gap-y-5 mx-7 my-4">
-              <div className="">
-                <label htmlFor="">Event Name</label>
-                <input type="text" className="w-full shadow-md p-2" />
+        <>
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-10"></div>
+          <div className="absolute z-20 bg-white shadow-md rounded-lg top-[5%] left-[20%] w-1/2 flex flex-col items-center justify-center h-9/10 font-popins">
+            <div className="py-5">
+              <div className="flex items-center justify-between p-7">
+                <h1 className="text-2xl">CREATE EVENTS</h1>
+                <button onClick={() => setModal(false)}>
+                  <img src={close} alt="close" />
+                </button>
               </div>
-              <div className="flex gap-x-3">
-                <div className="basis-1/2">
-                  <label htmlFor="">Date</label>
-                  <input
-                    type="text"
-                    className="w-full shadow-md p-2"
-                    value={dateValue}
-                  />
-                </div>
-                <div className="basis-1/4">
-                  <label htmlFor="">Time Start</label>
+              <form action="" className="flex flex-col gap-y-5 mx-7 my-4">
+                <div className="">
+                  <label htmlFor="">Event Name</label>
                   <input type="text" className="w-full shadow-md p-2" />
                 </div>
-                <div className="basis-1/4">
-                  <label htmlFor="">Time End</label>
-                  <input type="text" className="w-full shadow-md p-2" />
-                </div>
-              </div>
-              <div className="flex w-full space-x-4">
-                <div className="flex flex-col w-1/2 pt-3">
-                  <label htmlFor="">Location</label>
-                  <div className="flex gap-x-3">
+                <div className="flex gap-x-3">
+                  <div className="basis-1/2">
+                    <label htmlFor="">Date</label>
                     <input
                       type="text"
-                      className="shadow-md p-2 rounded-md w-full"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
+                      className="w-full shadow-md p-2"
+                      value={dateValue}
                     />
-                    <button
-                      type="button"
-                      className="bg-[#1DAEEF] w-10 h-10 rounded-md flex items-center justify-center"
-                      onClick={handleLocationSearch}
-                    >
-                      <img src={search} alt="search" className="w-5/6 m-1 h-2/3" />
-                    </button>
                   </div>
-                  <div className="flex flex-col mt-2">
-                    <label htmlFor="">Add guests</label>
+                  <div className="basis-1/4">
+                    <label htmlFor="">Time Start</label>
+                    <input type="text" className="w-full shadow-md p-2" />
+                  </div>
+                  <div className="basis-1/4">
+                    <label htmlFor="">Time End</label>
                     <input type="text" className="w-full shadow-md p-2" />
                   </div>
                 </div>
-                <div className="flex flex-col w-1/2 h-48">
-                  <EventProvider>
-                    <LeafletMap coordinates={locationCoords} />
-                  </EventProvider>
+                <div className="flex w-full space-x-4">
+                  <div className="flex flex-col w-1/2 pt-3">
+                    <label htmlFor="">Location</label>
+                    <div className="flex gap-x-3">
+                      <input
+                        type="text"
+                        className="shadow-md p-2 rounded-md w-full"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="bg-[#1DAEEF] w-10 h-10 rounded-md flex items-center justify-center"
+                        onClick={handleLocationSearch}
+                      >
+                        <img src={search} alt="search" className="w-5/6 m-1 h-2/3" />
+                      </button>
+                    </div>
+                    <div className="flex flex-col mt-2">
+                      <label htmlFor="">Add guests</label>
+                      <Select options={options} isMulti />
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-1/2 h-48">
+                    <EventProvider>
+                      <LeafletMap coordinates={locationCoords} />
+                    </EventProvider>
+                  </div>
                 </div>
-              </div>
-              <div className="">
-                <label htmlFor="">Description</label>
-                <textarea className="w-full shadow-md p-1 resize-none" />
-              </div>
-              <div className="flex flex-col items-end">
-                <button className="p-2 bg-[#1DAEEF] w-1/4 text-white text-md">Save</button>
-              </div>
-            </form>
+                <div className="">
+                  <label htmlFor="">Description</label>
+                  <textarea className="w-full shadow-md p-1 resize-none" />
+                </div>
+                <div className="flex flex-col items-end">
+                  <button className="p-2 bg-[#1DAEEF] w-1/4 text-white text-md">Save</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
       <div className="grid grid-cols-7 items-center border-b-2 w-full">
         {daysAWeek.map((day, index) => (
