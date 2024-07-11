@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Base from "./pages/Base";
 import Register from "./pages/Register";
+import MyProfile from "./components/MyProfile";
 
 const Root = () => {
   return (
@@ -21,6 +22,7 @@ const Root = () => {
           <Route path="/login" element={<Register />} />
           <Route path="/dashboard" element={<Base />} />
           <Route path="/register" element={<Login />} />
+          <Route path="/my-profile" element={<MyProfile />} />
           {/* </AuthProvider> */}
         </Routes>
     </Suspense>

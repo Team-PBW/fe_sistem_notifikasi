@@ -17,8 +17,11 @@ const NavbarCalendar = () => {
     setRightComponentClicked,
   } = useDateDay();
 
+  const {activities, setActivities} = useDateDay();
+
   const clickPrevNext = (e) => {
     console.log(e.target.alt);
+    setActivities({});
     if (e.target.alt === "prev") {
       setMonth(getMonth - 1);
       if (getMonth < 2) {

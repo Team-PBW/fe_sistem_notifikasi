@@ -6,6 +6,7 @@ import LeafletMap from "./MapContainer";
 import { EventProvider } from "../context/EventContext";
 import MapButton from "./MapButton";
 import Select from 'react-select'; // Import React-Select
+import { useNavigate } from "react-router-dom";
 
 const Calendar = () => {
   const {
@@ -88,44 +89,6 @@ const Calendar = () => {
     console.log(calendarDateNow);
     console.log(year);
   }, [calendarDateNow]);
-
-  const monthNames = {
-    "January": "01",
-    "February": "02",
-    "March": "03",
-    "April": "04",
-    "May": "05",
-    "June": "06",
-    "July": "07",
-    "August": "08",
-    "September": "09",
-    "October": "10",
-    "November": "11",
-    "December": "12"
-};
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!year || !month) return;
-        const monthInt = monthNames[month];
-        const options = {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
-        const response = await fetch(`http://localhost:3000/api/v1/event/all_events?start_time=${year}-${monthInt}-01&end_time=${year}-${monthInt}-29`, options);
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [year, month]);
 
   const [data, setData] = useState({
     "date": dateValue,
@@ -264,6 +227,10 @@ const Calendar = () => {
   //   fetchAllEvents();
   // }, []);
 
+  const navigate = useNavigate();
+
+  const [flag, setFlag] = useState(false);
+
   const submitData = async (e) => {
     e.preventDefault();
     const url = "http://localhost:3000/api/v1/event";
@@ -284,11 +251,97 @@ const Calendar = () => {
       const response = await res.json();
       // localStorage.setItem("token", response.message);
       console.log(response);
-      // navigate("/dashboard");
+      setFlag(true);
+      location.reload();
+      setMonth(getMonth);
     } catch (err) {
       console.error("Error:", err);
     }
   };
+
+  useEffect(() => {
+    if (flag) {
+      navigate("/dashboard");
+      setFlag(false);
+      setModal(false);
+    }
+  }, [flag])
+
+  const monthNames = {
+    "January": "01",
+    "February": "02",
+    "March": "03",
+    "April": "04",
+    "May": "05",
+    "June": "06",
+    "July": "07",
+    "August": "08",
+    "September": "09",
+    "October": "10",
+    "November": "11",
+    "December": "12"
+};
+
+  const {activities, setActivities} = useDateDay();
+
+  // useEffect(() => {
+  //   setActivities({});
+  // }, [getMonth])
+
+  useEffect(() => {
+    // setActivities({});
+    const fetchData = async () => {
+      try {
+        // if (!year || !month) return;
+        const monthInt = monthNames[month];
+        const options = {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+        console.log(year, month);
+        let monthVar = getMonth;
+        if(getMonth.toString.length == 1) {
+          monthVar = `0${getMonth}`;
+        }
+        const response = await fetch(`http://localhost:3000/api/v1/event/all_events?start_time=${getYear}-${monthVar}-01&end_time=${getYear}-${monthVar}-29`, options);
+        const data = await response.json();
+        
+        const updatedActivities = { ...activities };
+
+        data.forEach(event => {
+          const date = new Date(event.date);
+          const day = date.getDate();
+
+          if (!updatedActivities[day]) {
+            updatedActivities[day] = [];
+          }
+
+          updatedActivities[day].push(event);
+
+          setActivities(updatedActivities);
+          console.log(updatedActivities);
+        });
+
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+    // return () => setActivities({});
+  }, [getYear, getMonth]);
+
+  // const activities = {
+  //   1: ['Fishing', 'Swimming'],
+  //   2: ['Hiking'],
+  //   21: ['Reading'],
+  //   // Add activities for other days
+  // };
+  
 
   useEffect(() => {
     console.log(data);
@@ -412,9 +465,19 @@ const Calendar = () => {
                 key={dayIndex}
                 data-value={`${day}`}
                 onClick={getCalenderDate}
-                className="flex justify-center h-full border-b-2 border-r-2 pt-2"
+                className="flex flex-col items-center h-full border-b-2 border-r-2 pt-2"
               >
-                {day}
+                <div className="w-full text-center">{day}</div>
+                <span className="flex flex-col items-center w-full space-y-1">
+                  {activities[day]?.map((activity, activityIndex) => (
+                    // activity.map((val) =>
+                      <div className="bg-blue-500 w-full text-center rounded-md py-1 text-white" key={activityIndex}>
+                        {activity.title}
+                      </div>
+                    // )
+
+                  ))}
+                </span>
               </div>
             ))}
           </div>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Calendar from "../components/Calendar";
-import { CalendarProvider } from "../context/CalendarContext";
 import NavbarCalendar from "../components/NavbarCalendar";
 import MyProfile from "../components/MyProfile";
 import useDateDay from "../hooks/useDateDay";
@@ -44,26 +43,19 @@ const Dashboard = () => {
 
     fetchNotification();
   }, []);
-
-  // bg-[#444444] relative z-10
   
+  // State to track which component to display
+  const [currentView, setCurrentView] = useState("calendar");
+
   return (
     <div className="flex w-full h-screen">
-      {leftComponentClicked && <Sidebar />}
+      {leftComponentClicked && <Sidebar setCurrentView={setCurrentView} />}
       <div className="flex flex-col flex-auto h-full">
-        {/* <CalendarProvider> */}
-        <>
-          <NavbarCalendar />
-          <div className="flex-auto overflow-auto">
-            <Calendar />
-          </div>
-          {/* <div className={`${!leftComponentClicked ? `w-full` : ""}`}> */}
-            
-
-            {/* <MyProfile /> */}
-          {/* </div> */}
-        </>
-        {/* </CalendarProvider> */}
+        <NavbarCalendar />
+        <div className="flex-auto overflow-auto">
+          {currentView === "calendar" && <Calendar />}
+          {currentView === "profile" && <MyProfile />}
+        </div>
       </div>
       {rightComponentClicked && <Notification />}
     </div>
