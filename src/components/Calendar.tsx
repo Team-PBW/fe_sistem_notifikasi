@@ -89,11 +89,34 @@ const Calendar = () => {
     console.log(year);
   }, [calendarDateNow]);
 
+  const monthNames = {
+    "January": "01",
+    "February": "02",
+    "March": "03",
+    "April": "04",
+    "May": "05",
+    "June": "06",
+    "July": "07",
+    "August": "08",
+    "September": "09",
+    "October": "10",
+    "November": "11",
+    "December": "12"
+};
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!year || !month) return;
-        const response = await fetch(`https://localhost:3000/event/all_events?start_time=${year}-${month}-01&end_time=${year}-${month}-29`);
+        const monthInt = monthNames[month];
+        const options = {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+        const response = await fetch(`http://localhost:3000/api/v1/event/all_events?start_time=${year}-${monthInt}-01&end_time=${year}-${monthInt}-29`, options);
         const data = await response.json();
         console.log(data);
       } catch (error) {
@@ -217,6 +240,29 @@ const Calendar = () => {
   
     return formattedDate;
   }
+
+  // useEffect(() => {
+  //   const fetchAllEvents = async () => {
+  //     const url = "http://localhost:3000/api/v1/event/all_events?start_time=2024-04-01&end_time=2024-04-29";
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  
+  //     const res = await fetch(url, options);
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! status: ${res.status}`);
+  //     }
+  //     const response = await res.json();
+  //     // localStorage.setItem("token", response.message);
+  //     console.log(response);
+  //   }
+
+  //   fetchAllEvents();
+  // }, []);
 
   const submitData = async (e) => {
     e.preventDefault();
