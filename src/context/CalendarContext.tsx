@@ -24,6 +24,8 @@ export const CalendarProvider = ({ children }) => {
   const [leftComponentClicked, setLeftComponentClicked] = useState(false)
   const [rightComponentClicked, setRightComponentClicked] = useState(false)
 
+  const [notif, setNotif] = useState(null);
+
   const calendarContextValue = {
     monthToString,
     getYear,
@@ -33,7 +35,9 @@ export const CalendarProvider = ({ children }) => {
     leftComponentClicked,
     setLeftComponentClicked,
     rightComponentClicked,
-    setRightComponentClicked
+    setRightComponentClicked,
+    notif,
+    setNotif
   };
 
   return (
