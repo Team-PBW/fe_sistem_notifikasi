@@ -290,6 +290,13 @@ const Calendar = () => {
     }
   };
 
+  const activities = {
+    1: ['Fishing', 'Swimming'],
+    2: ['Hiking'],
+    21: ['Reading'],
+    // Add activities for other days
+  };
+
   useEffect(() => {
     console.log(data);
   }, [data])
@@ -412,9 +419,16 @@ const Calendar = () => {
                 key={dayIndex}
                 data-value={`${day}`}
                 onClick={getCalenderDate}
-                className="flex justify-center h-full border-b-2 border-r-2 pt-2"
+                className="flex flex-col items-center h-full border-b-2 border-r-2 pt-2"
               >
-                {day}
+                <div className="w-full text-center">{day}</div>
+                <span className="flex flex-col items-center w-full space-y-1">
+                  {activities[day]?.map((activity, activityIndex) => (
+                    <div className="bg-blue-500 w-full text-center rounded-md py-1 text-white" key={activityIndex}>
+                      {activity}
+                    </div>
+                  ))}
+                </span>
               </div>
             ))}
           </div>

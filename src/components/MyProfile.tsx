@@ -6,15 +6,15 @@ const MyProfile = () => {
   const { leftComponentClicked, rightComponentClicked } = useDateDay();
 
   return (
-    <div className="py-7 px-11 font-poppins w-full">
+    <div className="py-7 px-4 md:px-11 font-poppins w-full">
       {/* header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0">
         <div className="text-[#666666] text-lg font-semibold">My Profile</div>
         <div className="flex items-center gap-x-5">
-          <button className="rounded-md bg-[#FFD43D] px-8 py-3 text-[#666666]">
+          <button className="rounded-md bg-[#FFD43D] px-4 md:px-8 py-3 text-[#666666]">
             Edit
           </button>
-          <button className="rounded-md bg-[#1ED760] px-8 py-3 text-white">
+          <button className="rounded-md bg-[#1ED760] px-4 md:px-8 py-3 text-white">
             Save
           </button>
         </div>
@@ -22,47 +22,69 @@ const MyProfile = () => {
       {/* header */}
 
       {/* user information */}
-      <div className="mt-5 border-[#D9D9D9] border-[1.5px] shadow-md text-[#666666] h-30">
-        <div className="py-4 px-9">
-          <div className="flex gap-x-7">
-            <img src={chad} alt="chad" className="w-[10rem]" />
-            <div className="text-sm flex flex-col justify-between">
-              <div className="">
-                Nama:{" "}
-                <span className={`absolute ${leftComponentClicked ? `right-[24.2rem]` : `left-[23rem]`}`}>Kelvin Kusuma</span>
+      <div className="mt-5 border-[#D9D9D9] border-[1.5px] shadow-md text-[#666666]">
+        <div className="py-4 px-4 md:px-9">
+          <div className="flex flex flex-nowrap flex-col md:flex-row gap-4 md:gap-x-7 p-4">
+            <img src={chad} alt="chad" className="w-24 md:w-[10rem]" />
+            <div className="text-sm flex flex-col justify-between w-full">
+              <div className="flex flex-col md:flex-row">
+                <div className="flex-none w-14">
+                  Nama
+                </div>
+                <div className="flex-auto md:w-64">
+                  :
+                </div>
+                <div className="flex-auto md:w-32">
+                  Kelvin Kusuma
+                </div>
               </div>
-              <div className="">
-                No. Telp:{" "}
-                <span className={`absolute ${leftComponentClicked ? `right-[24.2rem]` : `left-[23rem]`}`}>087899507840</span>
+              <div className="flex flex-col md:flex-row mt-2 md:mt-0">
+                <div className="flex-none w-14">
+                  No. Telp
+                </div>
+                <div className="flex-auto md:w-64">
+                  :
+                </div>
+                <div className="flex-auto md:w-32">
+                  087899507840
+                </div>
               </div>
-              <div className="">
-                Email:{" "}
-                <span className={`absolute ${leftComponentClicked ? `left-[44rem]` : `left-[23rem]`}`}>
+              <div className="flex flex-col md:flex-row mt-2 md:mt-0">
+                <div className="flex-none w-14">
+                  Email
+                </div>
+                <div className="flex-auto md:w-64">
+                  :
+                </div>
+                <div className="flex-auto md:w-32">
                   kelvinkusuma@gmail.com
-                </span>
+                </div>
               </div>
-              <div className="">
-                Alamat:{" "}
-                <span className={`absolute ${leftComponentClicked ? `left-[44rem]` : `left-[23rem]`}`}>
-                  Jln. Nakula Sadewa, no.1, ds.bukit, kec.jimbaran, kab.badung,
-                  prov.bali
-                </span>
+              <div className="flex flex-col md:flex-row mt-2 md:mt-0">
+                <div className="flex-none w-14">
+                  Alamat
+                </div>
+                <div className="flex-auto md:w-64">
+                  :
+                </div>
+                <div className="flex-auto md:w-32">
+                  Jln. Nakula Sadewa, no.1, ds.bukit, kec.jimbaran, kab.badung, prov.bali
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
       {/* user information */}
 
       {/* user input */}
       <div className="mt-9 w-full text-sm text-[#666666] flex flex-col gap-y-6">
-        <div className="flex items-center w-full gap-[4rem]">
-          <div className="w-1/2">
+        <div className="flex flex-col md:flex-row items-center w-full gap-4 md:gap-[4rem]">
+          <div className="w-full md:w-1/2">
             <p>Event Name</p>
             <input type="text" className="shadow-md w-full p-2" />
           </div>
-          <div className="w-1/2">
+          <div className="w-full md:w-1/2">
             <p>Event Name</p>
             <input type="text" className="shadow-md w-full p-2" />
           </div>
@@ -72,9 +94,9 @@ const MyProfile = () => {
           <p>Alamat</p>
           <input type="text" className="shadow-md w-full p-2" />
         </div>
-        <div className="w-1/2">
+        <div className="w-full md:w-1/2">
           <p>Email</p>
-          <input type="text" className="shadow-md w-3/4 p-2" />
+          <input type="text" className="shadow-md w-full md:w-3/4 p-2" />
         </div>
       </div>
       {/* user input */}
